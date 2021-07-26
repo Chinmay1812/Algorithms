@@ -21,70 +21,51 @@
 #define mod 1000000007
 using namespace std;
 
-void merge(int *a, int s, int mid, int e)
+void merge(int *a,int left,int mid,int right)
 {
-    int b[mid - s + 1];
-    int p[e - mid];
-    int n1 = mid - s + 1;
-    int n2 = e - mid;
-    int xx = 0;
-    for (int i = 0; i <= mid; i++)
+	int i=left,j=mid,k=0;
+    int temp[right-left+1];
+    
+    while(i<mid && j<=right)
     {
-        b[xx] = a[i]; xx++;
-    }
-    xx = 0;
-    for (int i = mid + 1; i <= e; i++)
-    {
-        p[xx] = a[i]; xx++;
-    }
-    int i = 0, j = 0, c = 0;
-    while (i < n1 && j < n2)
-    {
-        if (b[i] < p[j])
+        if(a[i]<a[j])
         {
-            a[c] = b[i];
-            c++; i++;
+            temp[k++]=a[i++];
         }
-        else if (b[i] > p[j])
+        else if(a[i]==a[j])
         {
-            a[c] = p[j];
-            c++; j++;
+            temp[k++]=a[i++];
+            temp[k++]=a[j++];
         }
         else
         {
-            a[c] = p[j];
-            c++;
-            a[c] = p[j];
-            i++; j++;
+            temp[k++]=a[j++];
         }
     }
-
-    while (i < n1)
+    while(i<mid)
     {
-        a[c] = b[i];
-        c++;
-        i++;
+        temp[k++]=a[i++];
     }
-    while (j < n2)
+    while(j<=right)
     {
-        a[c] = p[j];
-        c++;
-        j++;
+        temp[k++]=a[j++];
     }
-
-
+    for(int x=left,z=0;x<=right;x++,z++)
+    {
+        a[x]=temp[z];
+    }
+    
 }
-void merge_sort(int *a, int s, int e)
-{
-    if (s >= e)
-    {
-        return;
-    }
 
-    int mid = s + (e - s) / 2;
-    merge_sort(a, 0, mid);
-    merge_sort(a, mid + 1, e);
-    merge(a, 0, mid, e);
+void merge_sort(int *a,int s,int e)
+{
+    if(s<e)
+    {
+        int mid=s+(e-s)/2;
+        merge_sort(a,s,mid);
+        merge_sort(a,mid+1,e);
+        merge(a,s,mid+1,e);
+    }
 }
 
 int32_t main()
@@ -93,16 +74,16 @@ int32_t main()
     cin.tie(0);
     int T = clock();
     int t = 1 ;
-    //cin >> t ;
+    cin >> t ;
     while (t--)
     {
         int n;
-        cin >> n;
+    	cin>>n;
         int a[n];
-        read(a, n);
-        merge_sort(a, 0, n - 1);
-        print(a, n);
-        cout << endl;
+        read(a,n);
+        merge_sort(a,0,n-1);
+		print(a,n);
+        cout<<endl;
     }
     cerr << "\nTIME: " << (long double)(clock() - T) / CLOCKS_PER_SEC << " sec\n";
     T = clock();
